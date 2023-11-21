@@ -1,55 +1,55 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Form usage</title>
-</head>
-<body style="background-color: #f2f2f2;">
-    <div class="heading-con" style="text-align: center">
-        <h1 class="text-center main-heading">Registration Form</h1>
-        <div class="underline"></div>
-    </div>
-
-    <form id="details">
-        <div class="labels">
-            <label for="username" >Username:</label>
-            <input required type="text" id="username" name="Username">
-        </div>
-
-
-        <div class="labels">
-            <label for="email" >Email</label>
-            <input required type="email" id="email" name="Email" >
-        </div>
-
-
-        <div class="labels">
-            <label for="password" >Password</label>
-            <input required type="password" id="password" name="password" >
-        </div>
-
-
-        <div class="labels">
-            <label for="dob" >Date of Birth</label>
-            <input required type="date" id="dob" >
-        </div>
-
-        <div class="labels">
-            <input style="width:20px;height:20px" type="checkbox" id="accept" >
-            <label for="accept" >Accept Terms & Conditions</label>
-
-        </div>
-
-        <div class="buttonlabels">
-            <button type="submit" style="text-align: center;" id='demo'>Submit</button>
-        </div>
-
-        <div>
-      <h2 style = "text-decoration: underline;">Table of User Entries</h2>
-         <div id = "user-entries">
-        
-      </div>
-    </div>
-</form >
-<script src="index.js">
-</script>
+<!-- Designined by CodingLab - youtube.com/codinglabyt -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Responsive Registration Form | CodingLab </title>
+    <link rel="stylesheet" href="index.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+<div class="container">
+<div class="title">Registration</div>
+<div class="content">
+<form action="#" id="form">
+<div class="user-details">
+<div class="input-box">
+<span class="details">Full Name</span>
+<input id="name" type="text" name=" First Name" placeholder="Your First Name" required><br>
+</div>
+<div class="input-box">
+<span class="details">Email</span>
+<input id="email" type="email" name="email"placeholder="Your email" required>
+</div>
+<div class="input-box">
+<span class="details">Password</span>
+<input type="password" id="password" name="password" placeholder="Enter Password" required/>
+</div>
+<div class="input-box">
+<span class="details">Date of Birth</span>
+<input id="dob" name="dob" type="date" required/>
+</div>
+<div class="Check-box">
+<span class="details"> I agree to share term and condition</span>
+<input type="checkbox" name="agree" id="tc"><br> 
+</div>
+</div>
+<div class="button">
+<input type="submit" value="Submit Now">
+</div>
+</form>
+<div id="table-box">
+  <span class="details"> Entries</span>
+  <table id="user-table">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th>Dob</th>
+      <th>Accepted terms?
+</div>
+</div>
+</div>
+<script src="index.js"></script>
+</body>
 </html>
