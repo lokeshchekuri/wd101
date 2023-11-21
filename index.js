@@ -1,101 +1,127 @@
-let mail = document.getElementById('email');
-      email.addEventListener('input',()=> mailvalidate(mail));
-      function Mailvalidate(element){
-        if(element.validity.typeMismatch){
-          element.setCustomValidity("Format of email is not correct");
-          element.reportValidity();
-        }
-        else{
-          element.setCustomValidity("");
-        }
-      }
- 
+let element = (id) => document.getElementById(id);
 
-     var obj = document.getElementById("dob");
-      
-      obj.addEventListener('input', ()=> validdate(obj));
+let classes = (classes) => document.getElementsByClassName(classes);
 
-    function Difference(user_dob, today) {  
-        const date1 = Date.UTC(user_dob.getFullYear(), user_dob.getMonth(), user_dob.getDate());
-        const date2= Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
-          day = 1000*3600*24;
-        return(date2- date1)/day
+let user_entries = [];
+
+function fillTable(){
+    let obj = localStorage.getItem("user_entries");
+    if(obj){
+        user_entries = JSON.parse(obj);
+    }else{
+        user_entries = [];
     }
-      
-      
-      function Validdate(obj) {
-        
-        let user_dob = new Date(obj.value);
-        let today_date = new Date();
-        time_differ = difference(user_dob,today_date);
+    return user_entries;
+}
+user_entries = fillTable();
 
-        console.log(time_differ);
-        if ((time_differ < 6570) || (time_differ>=20075)){
-          obj.setCustomValidity("You are not eligible as you are not  belong to 18 - 55 age group");
-          obj.reportValidity();
-      }
-      else{
-        obj.setCustomValidity('');
-      }
-      
-   }
+let username = element("name"),
+  email = element("email"),
+  password = element("password"),
+  tc = element("tc"),
+  dob = element("dob");
 
-    let retrieveddata = () => {
-          let userentries = localStorage.getItem("user_details");
-          if(userentries){
-            userentries = JSON.parse(userentries);
-          }
-          else{
-            userentries = [];
-          }
-          return userentries;
-        }
+let errormsg = classes("errormsg");
 
-   let details_form = document.getElementById("details");
-   let entries = retrieveddata();
-   let display_data = () => {
-          let entries = retrieveddata();
+let form = element("form");
 
-          let tableentries = entries.map((val)=>{
-            let namecell = <td> ${val.name} </td>;
-            let emailcell = <td> ${val.email} </td>;
-            let passwordcell = <td> ${val.password} </td>;
-            let dobcell = <td> ${val.dob} </td>;
-            let acceptedcell = <td> ${val.accepted} </td>;
+function verify(elem,message,cnd){
+    if(cnd){
+        elem.style.border = "2px solid red";
+        elem.setCustomValidity(message);
+        elem.reportValidity();
+    }else{
+        elem.style.border = "2px solid green";
+        elem.setCustomValidity('');
 
-            let trow = <tr>${namecell} ${emailcell} ${passwordcell} ${dobcell} ${acceptedcell}</tr>;
-            return trow;
-          }).join("\n");
+    }
+}
+
+function checkDOB(){
+    let age = new Date().getFullYear() - new Date(dob.value).getFullYear();
+    if(age < 18 || age>55){
+        return false;
+    }else{
+        return true;
+    }
+}
+let message_name = "Username must be at least 3 characters long";
+let message_email = "Email must be valid";
+let message_agree = "You must agree to the terms and conditions";
+let message_dob = "You age must be between 18 and 55 to continue";
+
+username.addEventListener("input", (e) => {
+    let cond_name = username.value.length < 3;
+    e.preventDefault();
+    verify(username,message_name,cond_name);
+});
+
+email.addEventListener("input", (e) => {
+    let cond_email = !(email.value.includes("@") && email.value.includes("."));
+    e.preventDefault();
+    verify(email,message_email,cond_email);
+});
+
+dob.addEventListener("input", (e) => {
+    let cond_dob = !checkDOB();
+    e.preventDefault();
+    verify(dob,message_dob,cond_dob);
+});
+tc.addEventListener("input", (e) => {
+    let cond_agree = !tc.checked;
+    e.preventDefault();
+    verify(tc,message_agree,cond_agree);
+});
+
+function makeObject(){
+    let check = false;
+    if(tc.checked){
+        check = true;
+    }
+    let obj = {
+        name: username.value,
+        email: email.value,
+        password: password.value,
+        dob: dob.value,
+        checked: check
+    }
+    return obj;
+}
 
 
-let table = <table style = 'width: 51%;border: 3px solid black;'><tr class="rk"style = 'border: 3px solid black;'><th>Name</th><th>Email</th><th>Password</th><th>Dob</th><th>Accepted terms?</th></tr>${tableentries} </table>;
-          let details = document.getElementById("user-entries");
-          details.innerHTML = table;
-        }
+function displayTable(){
+    let table = element("user-table");
+    let entries = user_entries;
+    let str = `<tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Dob</th>
+                    <th>Accepted terms?</th>
+                </tr>\n`;
+    for(let i=0;i<entries.length;i++){
+        str += `<tr>
+                    <td>${entries[i].name}</td>
+                    <td>${entries[i].email}</td>
+                    <td>${entries[i].password}</td>
+                    <td>${entries[i].dob}</td>
+                    <td>${entries[i].checked}</td>
+                </tr>\n`;
+    }
+    table.innerHTML = str;
+}
 
-let final_details = (event) => {
-          event.preventDefault();
-          let name = document.getElementById("username").value;
-          console.log(name);
-          let email = document.getElementById("email").value;
-          let password = document.getElementById("password").value;
-          let dob = document.getElementById("dob").value;
-          let accepted = document.getElementById("accept").checked;
-
-          let entry_data = {
-             name,
-             email,
-             password,
-             dob,
-             accepted
-          };
-
-          entries.push(entry_data);
-          localStorage.setItem("user_details", JSON.stringify(entries));
-         
-          display_data();
-
-        };
-        
-details_form.addEventListener('submit', final_details);
-display_data();
+form.addEventListener("submit", (e) => {
+    let cond_agree= !tc.checked;
+    e.preventDefault();
+    console.log('working');
+    if (!cond_agree) {
+        let obj = makeObject();
+        user_entries.push(obj);
+        localStorage.setItem("user_entries", JSON.stringify(user_entries));
+    }
+    displayTable();
+});
+window.onload = (event) => {
+    displayTable();
+}
